@@ -1,75 +1,103 @@
 # hylreg-hub
 
-在一个 Git 仓库中集中管理多个 Git 仓库：通过配置文件列出子仓库，用脚本批量克隆、拉取、查看状态。
+使用 **Git Submodule** 在一个仓库中管理多个 Git 子仓库。本仓库的每次提交会记录各子仓库的**固定 commit**，他人 clone 后可复现同一套代码组合。
 
 ## 目录结构
 
 ```
 hylreg_hub/
-├── repos.json          # 要管理的仓库列表（编辑此文件添加/删除仓库）
-├── repos/              # 子仓库克隆到此目录（默认）
-├── scripts/
-│   └── manage_repos.py # 管理脚本
-├── pyproject.toml
+├── repos/              # 子模块放在此目录（每个子目录对应一个 submodule）
+├── .gitmodules         # 子模块列表（由 git submodule add 自动生成）
 └── README.md
 ```
 
-## 配置仓库列表
+## 添加子仓库（子模块）
 
-编辑 `repos.json`，在 `repos` 数组中添加仓库：
-
-```json
-{
-  "repos": [
-    {
-      "name": "my-project",
-      "url": "https://github.com/you/my-project.git",
-      "branch": "main",
-      "path": "repos/my-project"
-    }
-  ]
-}
-```
-
-- `name`、`url` 必填；`branch` 可选，默认 `main`；`path` 可选，不写则默认为 `repos/<name>`。  
-- 删除某个仓库：从数组中移除对应项即可（本地 `repos/` 里的目录需自行删除）。
-
-## 使用方式
-
-### 1. 用 uv 运行（推荐）
+在仓库根目录执行：
 
 ```bash
-# 克隆配置中的所有仓库到 repos/
-uv run python scripts/manage_repos.py clone
+# 添加子模块到 repos/<名称>
+git submodule add <仓库URL> repos/<名称>
 
-# 对所有已克隆的仓库执行 git pull
-uv run python scripts/manage_repos.py pull
-
-# 查看各仓库的 git status
-uv run python scripts/manage_repos.py status
+# 示例
+git submodule add https://github.com/example/my-project.git repos/my-project
 ```
 
-指定仓库根目录和配置文件：
+添加后需要提交本仓库的变更（包含 `.gitmodules` 和 `repos/<名称>` 的 gitlink）：
 
 ```bash
-uv run python scripts/manage_repos.py -C /path/to/hub clone
-uv run python scripts/manage_repos.py -c /path/to/repos.json status
+git add .gitmodules repos/<名称>
+git commit -m "chore: 添加子模块 repos/<名称>"
 ```
 
-### 2. 安装后使用
+## 克隆本仓库（含所有子模块）
 
 ```bash
-uv sync
-uv run manage-repos clone
-uv run manage-repos pull
-uv run manage-repos status
+# 一次性克隆本仓库并初始化、拉取所有子模块
+git clone --recurse-submodules <本仓库URL>
+cd hylreg_hub
 ```
 
-## 与 Git 子模块的关系
+若已经 clone 了本仓库但当时未带子模块：
 
-- **当前方式**：只做「配置 + 脚本」管理，子仓库是普通 clone，和本仓库的 Git 无关，适合「一堆独立项目放在一起克隆/更新」。
-- 若你希望**本仓库的提交里记录每个子仓库的精确 commit**，可以用 Git 子模块：
-  - 在要放子仓库的目录执行：`git submodule add <url> repos/<name>`
-  - 子模块的 commit 会记录在本仓库的 `.gitmodules` 和提交里，其他人 `clone --recurse-submodules` 或 `submodule update --init` 即可拿到相同版本。
+```bash
+git submodule update --init --recursive
+```
 
-两种方式可以并存：部分用脚本管理，部分用 submodule，按需选择。
+## 日常使用
+
+### 拉取本仓库与所有子模块到最新
+
+```bash
+git pull
+git submodule update --init --recursive
+```
+
+或只更新子模块到本仓库记录的 commit（不拉取子模块远端）：
+
+```bash
+git submodule update --init --recursive
+```
+
+### 在子模块里工作
+
+```bash
+cd repos/<名称>
+git checkout main   # 或你要的分支
+git pull
+# 修改、提交、推送...
+cd ../..
+# 若希望本仓库记录该子模块的新 commit：
+git add repos/<名称>
+git commit -m "chore: 更新子模块 <名称>"
+git push
+```
+
+### 更新子模块到其远端最新并记录到本仓库
+
+```bash
+git submodule update --remote repos/<名称>
+git add repos/<名称>
+git commit -m "chore: 更新子模块 <名称> 到最新"
+git push
+```
+
+### 删除子模块
+
+```bash
+# 1. 反注册并移除工作区（不删子模块目录里的文件则去掉 --force）
+git submodule deinit -f repos/<名称>
+git rm -f repos/<名称>
+# 2. 删除 .git/modules/repos/<名称>（可选，彻底清理）
+rm -rf .git/modules/repos/<名称>
+# 3. 提交
+git commit -m "chore: 移除子模块 repos/<名称>"
+```
+
+## 子模块状态
+
+查看各子模块当前 commit 与是否有未提交修改：
+
+```bash
+git submodule status
+```

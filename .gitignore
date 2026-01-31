@@ -1,20 +1,3 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-.venv/
-venv/
-env/
-*.egg-info/
-.eggs/
-dist/
-build/
-
-# uv
-.uv/
-
 # IDE
 .idea/
 .vscode/
@@ -29,6 +12,3 @@ Thumbs.db
 .env
 .env.local
 *.local
-
-# 本仓库管理的子仓库（各自独立 git，由脚本克隆）
-repos/
