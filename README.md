@@ -143,5 +143,5 @@ git commit -m "chore: 移除子模块 repos/<名称>"
 
 **流程**：先看 `.gitmodules` 或上面命令知道有哪些子模块（路径），再按需执行 `git submodule update --init repos/<名称>` 拉取指定子模块。
 
-**添加 hylreg_LLM 子模块**（若尚未添加）：在仓库根目录执行  
-`git submodule add https://github.com/hylreg/hylreg_LLM.git repos/hylreg_LLM`，然后提交 `.gitmodules` 和 `repos/hylreg_LLM`。
+**添加其他子模块（示例）**：在仓库根目录执行  
+`git submodule add <仓库URL> repos/<名称>`，然后提交 `.gitmodules` 和 `repos/<名称>`。
