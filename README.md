@@ -120,11 +120,25 @@ git commit -m "chore: 移除子模块 repos/<名称>"
 
 ## 查看有哪些子模块
 
-- **看配置文件**：打开 `.gitmodules`，里面会列出每个子模块的 `path` 和 `url`。
-- **看状态**：在仓库根目录执行下面命令，会列出所有子模块及其当前 commit、是否有未提交修改：
+**子模块列表在 clone 本仓库时就已经带下来了**，不需要先拉取任何子模块也能看到。
 
-```bash
-git submodule status
-```
+- **看配置文件**：打开根目录下的 `.gitmodules`，里面会列出每个子模块的 `path` 和 `url`。例如：
+  ```ini
+  [submodule "repos/my-project"]
+      path = repos/my-project
+      url = https://github.com/example/my-project.git
+  ```
+  这里的 `path` 就是子模块在本仓库里的路径（如 `repos/my-project`），拉取指定子模块时用这个路径即可。
 
-尚未执行过 `git submodule update --init` 时，子模块会显示为「未初始化」；初始化后才会显示具体 commit。
+- **用命令列出路径**：在仓库根目录执行下面命令，只打印所有子模块的路径（方便复制去拉取）：
+  ```bash
+  git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
+  ```
+
+- **看状态**：执行下面命令会列出所有子模块及其当前 commit、是否已初始化、是否有未提交修改：
+  ```bash
+  git submodule status
+  ```
+  尚未执行过 `git submodule update --init` 时，对应子模块会显示为「未初始化」；初始化后才会显示具体 commit。
+
+**流程**：先看 `.gitmodules` 或上面命令知道有哪些子模块（路径），再按需执行 `git submodule update --init repos/<名称>` 拉取指定子模块。
