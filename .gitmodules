@@ -7,3 +7,6 @@
 [submodule "repos/hylreg_OpenCV"]
 	path = repos/hylreg_OpenCV
 	url = https://github.com/hylreg/hylreg_OpenCV.git
+[submodule "repos/hylreg_LLM"]
+	path = repos/hylreg_LLM
+	url = https://github.com/hylreg/hylreg_LLM.git
