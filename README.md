@@ -59,6 +59,30 @@ git submodule update --init --recursive
 git submodule update --init --recursive
 ```
 
+### 只拉取 / 更新指定子模块
+
+只初始化并拉取某一个子模块（到本仓库记录的 commit）：
+
+```bash
+git submodule update --init repos/<名称>
+```
+
+只把某一个子模块更新到其远端最新：
+
+```bash
+git submodule update --remote repos/<名称>
+```
+
+也可以进入该子模块目录后自己拉取：
+
+```bash
+cd repos/<名称>
+git pull
+cd ../..
+```
+
+若希望本仓库记录该子模块的新 commit，再执行 `git add repos/<名称>` 并提交。
+
 ### 在子模块里工作
 
 ```bash
@@ -94,10 +118,13 @@ rm -rf .git/modules/repos/<名称>
 git commit -m "chore: 移除子模块 repos/<名称>"
 ```
 
-## 子模块状态
+## 查看有哪些子模块
 
-查看各子模块当前 commit 与是否有未提交修改：
+- **看配置文件**：打开 `.gitmodules`，里面会列出每个子模块的 `path` 和 `url`。
+- **看状态**：在仓库根目录执行下面命令，会列出所有子模块及其当前 commit、是否有未提交修改：
 
 ```bash
 git submodule status
 ```
+
+尚未执行过 `git submodule update --init` 时，子模块会显示为「未初始化」；初始化后才会显示具体 commit。
