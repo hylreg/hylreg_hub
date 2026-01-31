@@ -29,3 +29,6 @@ Thumbs.db
 .env
 .env.local
 *.local
+
+# 本仓库管理的子仓库（各自独立 git，由脚本克隆）
+repos/
