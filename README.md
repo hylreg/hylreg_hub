@@ -142,3 +142,6 @@ git commit -m "chore: 移除子模块 repos/<名称>"
   尚未执行过 `git submodule update --init` 时，对应子模块会显示为「未初始化」；初始化后才会显示具体 commit。
 
 **流程**：先看 `.gitmodules` 或上面命令知道有哪些子模块（路径），再按需执行 `git submodule update --init repos/<名称>` 拉取指定子模块。
+
+**添加 hylreg_LLM 子模块**（若尚未添加）：在仓库根目录执行  
+`git submodule add https://github.com/hylreg/hylreg_LLM.git repos/hylreg_LLM`，然后提交 `.gitmodules` 和 `repos/hylreg_LLM`。
