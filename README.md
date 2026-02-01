@@ -49,17 +49,23 @@ git submodule update --init --recursive
 
 ## 日常使用
 
-### 拉取本仓库与所有子模块到最新
+### 拉取本仓库并让子模块对齐到「本仓库记录的 commit」
 
 ```bash
 git pull
 git submodule update --init --recursive
 ```
 
-或只更新子模块到本仓库记录的 commit（不拉取子模块远端）：
+说明：`git submodule update --init --recursive` 会把每个子模块**切换到父仓库当前记录的 commit**，而不是各子模块远端分支的最新。这样能保证和他人/CI 使用同一套固定版本。若只想对齐到记录版本、不拉子模块远端，只执行上面第二行即可。
+
+若要让**所有**子模块都拉到各自远端最新（并可选地记录到本仓库）：
 
 ```bash
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
+git add .
+git status   # 确认变更
+git commit -m "chore: 更新所有子模块到远端最新"
+git push
 ```
 
 ### 只拉取 / 更新指定子模块
