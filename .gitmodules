@@ -1,12 +1,12 @@
-[submodule "repos/hylreg_QT"]
-	path = repos/hylreg_QT
+[submodule "hylreg_QT"]
+	path = hylreg_QT
 	url = https://github.com/hylreg/hylreg_QT.git
-[submodule "repos/hylreg_PCL"]
-	path = repos/hylreg_PCL
+[submodule "hylreg_PCL"]
+	path = hylreg_PCL
 	url = https://github.com/hylreg/hylreg_PCL.git
-[submodule "repos/hylreg_OpenCV"]
-	path = repos/hylreg_OpenCV
+[submodule "hylreg_OpenCV"]
+	path = hylreg_OpenCV
 	url = https://github.com/hylreg/hylreg_OpenCV.git
-[submodule "repos/hylreg_LLM"]
-	path = repos/hylreg_LLM
+[submodule "hylreg_LLM"]
+	path = hylreg_LLM
 	url = https://github.com/hylreg/hylreg_LLM.git
